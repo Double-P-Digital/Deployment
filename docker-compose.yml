@@ -1,39 +1,79 @@
 services:
+  # MongoDB Database (opțional - doar dacă folosești MongoDB local)
+  # Dacă folosești MongoDB Atlas, acest serviciu nu este necesar
+  # Pentru MongoDB Atlas, setează doar MONGO_URI în .env
+  # mongodb:
+  #   image: mongo:7
+  #   container_name: mongodb
+  #   ports:
+  #     - "${MONGO_PORT:-27017}:27017"
+  #   env_file:
+  #     - .env
+  #   environment:
+  #     - MONGO_INITDB_DATABASE=${MONGO_DATABASE:-dailyguest}
+  #     - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME:-}
+  #     - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD:-}
+  #   volumes:
+  #     - mongodb_data:/data/db
+  #   restart: unless-stopped
+  #   networks:
+  #     - app-network
+
+  # Backend API
+  backend:
+    build:
+      context: ./dailyguest-api
+      dockerfile: backend.Dockerfile
+    container_name: backend-api
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - MONGO_URI=${MONGO_URI:-}
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # Frontend Next.js
   frontend:
     build:
-      context: ./Website-Adrian/frontend
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./Website-Adrian/frontend/frontend.Dockerfile
+      args:
+        # These are fallbacks if .env doesn't exist or doesn't have NEXT_PUBLIC_* vars
+        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:3000}
+        - NEXT_PUBLIC_API_KEY=${NEXT_PUBLIC_API_KEY:-}
+        - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-}
+        - NEXT_PUBLIC_PYNBOOKING_API_KEY=${NEXT_PUBLIC_PYNBOOKING_API_KEY:-}
+    container_name: frontend
     ports:
       - "3001:3001"
     environment:
       - NODE_ENV=production
       - PORT=3001
+    depends_on:
+      - backend
     restart: unless-stopped
     networks:
       - app-network
 
-  backend:
-    build:
-      context: ./dailyguest-api
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - PORT=3000
-    restart: unless-stopped
-    networks:
-      - app-network
-
+  # Dashboard React/Vite
   dashboard:
     build:
       context: ./apartment-dashboard
-      dockerfile: Dockerfile
+      dockerfile: dashboard.Dockerfile
+    container_name: dashboard
     ports:
-      - "80:80"
+      - "5173:80"
     restart: unless-stopped
     networks:
       - app-network
+
+volumes:
+  mongodb_data:
 
 networks:
   app-network:
