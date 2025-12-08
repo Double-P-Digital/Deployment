@@ -1,0 +1,9 @@
+[submodule "Website-Adrian"]
+	path = Website-Adrian
+	url = https://github.com/Double-P-Digital/Website-Adrian
+[submodule "dailyguest-api"]
+	path = dailyguest-api
+	url = https://github.com/Double-P-Digital/dailyguest-api
+[submodule "apartment-dashboard"]
+	path = apartment-dashboard
+	url = https://github.com/Double-P-Digital/apartment-dashboard
