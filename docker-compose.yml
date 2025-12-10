@@ -1,25 +1,4 @@
 services:
-  # MongoDB Database (opțional - doar dacă folosești MongoDB local)
-  # Dacă folosești MongoDB Atlas, acest serviciu nu este necesar
-  # Pentru MongoDB Atlas, setează doar MONGO_URI în .env
-  # mongodb:
-  #   image: mongo:7
-  #   container_name: mongodb
-  #   ports:
-  #     - "${MONGO_PORT:-27017}:27017"
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     - MONGO_INITDB_DATABASE=${MONGO_DATABASE:-dailyguest}
-  #     - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME:-}
-  #     - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD:-}
-  #   volumes:
-  #     - mongodb_data:/data/db
-  #   restart: unless-stopped
-  #   networks:
-  #     - app-network
-
-  # Backend API
   backend:
     build:
       context: ./dailyguest-api
@@ -28,7 +7,7 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - .env
+      - ./dailyguest-api/.env
     environment:
       - NODE_ENV=production
       - PORT=3000
