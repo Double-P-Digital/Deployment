@@ -22,7 +22,6 @@ services:
       context: .
       dockerfile: ./Website-Adrian/frontend/frontend.Dockerfile
       args:
-        # These are fallbacks if .env doesn't exist or doesn't have NEXT_PUBLIC_* vars
         - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:3000}
         - NEXT_PUBLIC_API_KEY=${NEXT_PUBLIC_API_KEY:-}
         - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-}
