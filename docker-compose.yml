@@ -1,4 +1,5 @@
 services:
+  # Backend NestJS API
   backend:
     build:
       context: ./dailyguest-api
@@ -11,7 +12,6 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=3000
-      - MONGO_URI=${MONGO_URI:-}
     restart: unless-stopped
     networks:
       - app-network
@@ -21,11 +21,6 @@ services:
     build:
       context: .
       dockerfile: ./Website-Adrian/frontend/frontend.Dockerfile
-      args:
-        - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL:-http://localhost:3000}
-        - NEXT_PUBLIC_API_KEY=${NEXT_PUBLIC_API_KEY:-}
-        - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY:-}
-        - NEXT_PUBLIC_PYNBOOKING_API_KEY=${NEXT_PUBLIC_PYNBOOKING_API_KEY:-}
     container_name: frontend
     ports:
       - "3001:3001"
